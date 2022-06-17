@@ -108,9 +108,16 @@ namespace KKC1_Razliv
         private void button3_Click(object sender, EventArgs e)
         {
             DataTable dt2 = new DataTable();
-            dt2 = ReadJSON();
+            DataTable dt3 = new DataTable();            
+            dt2 = loadSheetFromOutput();
+            dt3 = ReadJSON();
+            long NPLV = 111111;
+            DataRow match = dt2.Select($"{NPLV} = NPLV").SingleOrDefault();
 
-                        DataRow insert = dt2.NewRow();
+            label6.Text = match.ToString();
+           
+            /*
+            DataRow insert = dt2.NewRow();
             insert["NPLV"] = textBox2.Text;
             insert["VES_BEF"] = textBox3.Text;
             insert["VIDERZ_H"] = textBox4.Text;
@@ -119,7 +126,7 @@ namespace KKC1_Razliv
             dt2.Rows.Add(insert);
             WriteJSON(dt2);
             dataGridView2.DataSource = ReadJSON();
-
+            */
            
         }
     }
