@@ -18,6 +18,7 @@ namespace KKC1_Razliv
         public Form1()
         {
             InitializeComponent();
+            dataGridView2.DataSource = ReadJSON();
         }
 
         //Метод для считывания схемы файла xlsx
@@ -89,7 +90,7 @@ namespace KKC1_Razliv
         {
             dataGridView1.DataSource = loadSheetFromOutput();
         }
-
+        //Метод для конвертации json в datatable
         public DataTable ReadJSON()
         {
             DataTable dt = new DataTable();
@@ -97,31 +98,29 @@ namespace KKC1_Razliv
             dt = JsonConvert.DeserializeObject<DataTable>(json);
             return dt;
         }
-        private void button2_Click(object sender, EventArgs e)
+        
+        //Метод для добавления данных в json
+        public void WriteJSON(DataTable dt)
         {
-            dataGridView2.DataSource = ReadJSON();
+            File.WriteAllText("C:\\Users\\kuptsov_ae\\source\\repos\\KKC1_Razliv\\KKC1_Razliv\\Filec_0.json", JsonConvert.SerializeObject(dt));
         }
-
-        public void AddDataToJson()
+        //Расчет
+        private void button3_Click(object sender, EventArgs e)
         {
-            DataTable dt = new DataTable();
-            string json = File.ReadAllText("C:\\Users\\kuptsov_ae\\source\\repos\\KKC1_Razliv\\KKC1_Razliv\\Filec_0.json");
-            dt = JsonConvert.DeserializeObject<DataTable>(json);
-            DataRow insert = dt.NewRow();
+            DataTable dt2 = new DataTable();
+            dt2 = ReadJSON();
+
+                        DataRow insert = dt2.NewRow();
             insert["NPLV"] = textBox2.Text;
             insert["VES_BEF"] = textBox3.Text;
             insert["VIDERZ_H"] = textBox4.Text;
             insert["VIDERZ_M"] = textBox5.Text;
             insert["PREDICT"] = Convert.ToDouble(textBox2.Text);
-            dt.Rows.Add(insert);
-            File.WriteAllText("C:\\Users\\kuptsov_ae\\source\\repos\\KKC1_Razliv\\KKC1_Razliv\\Filec_0.json", JsonConvert.SerializeObject(dt));
+            dt2.Rows.Add(insert);
+            WriteJSON(dt2);
+            dataGridView2.DataSource = ReadJSON();
 
-
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            AddDataToJson();
+           
         }
     }
 }
