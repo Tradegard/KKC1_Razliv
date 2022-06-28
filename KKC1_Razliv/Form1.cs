@@ -43,6 +43,9 @@ namespace KKC1_Razliv
             da = new OleDbDataAdapter(sql, cnn);
             da.Fill(dt);
 
+            comboBox2.DataSource = dt;
+            comboBox2.DisplayMember = "NPLV";
+
             cnn.Close();
 
             return dt;
@@ -83,6 +86,9 @@ namespace KKC1_Razliv
             da.Fill(dt);
             cnn.Close();
 
+            comboBox2.DataSource = dt;
+            comboBox2.DisplayMember = "NPLV";
+
             return dt;
             
         }
@@ -118,15 +124,15 @@ namespace KKC1_Razliv
                 DataTable dt2 = new DataTable();
                 DataTable dt3 = new DataTable();
                 dt2 = loadSheetFromOutput();
-                //dt3 = ReadJSON();
+                dt3 = ReadJSON();
                 var nplv = 0;
                 var vesbef = 0;
                 var viderz_h = 0;
                 var viderz_m = 0;
-                if (textBox2.Text == "") { MessageBox.Show("Введите номер плавки!"); } else { nplv = Convert.ToInt32(textBox2.Text); };
-                if (textBox3.Text == "") { MessageBox.Show("Введите Вес До!"); } else { vesbef = Convert.ToInt32(textBox3.Text); };
-                if (textBox4.Text == "") { MessageBox.Show("Введите Часы Выдержки!"); } else { viderz_h = Convert.ToInt32(textBox4.Text); };
-                if (textBox5.Text == "") { MessageBox.Show("Введите Минуты Выдержки!"); } else { viderz_m = Convert.ToInt32(textBox5.Text); };        
+                nplv = Convert.ToInt32(comboBox2.GetItemText(this.comboBox2.SelectedItem));
+                if (textBox3.Text == "") { MessageBox.Show("Введите Вес До!"); } else if (int.TryParse(textBox3.Text, out vesbef)) { vesbef = Convert.ToInt32(textBox3.Text); };
+                if (textBox4.Text == "") { MessageBox.Show("Введите Часы Выдержки!"); } else if (int.TryParse(textBox4.Text, out viderz_h)) { viderz_h = Convert.ToInt32(textBox4.Text); };
+                if (textBox5.Text == "") { MessageBox.Show("Введите Минуты Выдержки!"); } else if (int.TryParse(textBox5.Text, out viderz_m)) { viderz_m = Convert.ToInt32(textBox5.Text); };        
                 var viderz = viderz_h + viderz_m / 60;
                 string itemOUT = null;
 
@@ -158,12 +164,12 @@ namespace KKC1_Razliv
 
                     itemOUT = predict.ToString();                    
                 }
-
+                
                 label6.Text = itemOUT;
 
-                /*
+                
                 DataRow insert = dt3.NewRow();
-                insert["NPLV"] = textBox2.Text;
+                insert["NPLV"] = comboBox2.GetItemText(this.comboBox2.SelectedItem);
                 insert["VES_BEF"] = textBox3.Text;
                 insert["VIDERZ_H"] = textBox4.Text;
                 insert["VIDERZ_M"] = textBox5.Text;
@@ -171,8 +177,16 @@ namespace KKC1_Razliv
                 dt3.Rows.Add(insert);
                 WriteJSON(dt3);
                 dataGridView2.DataSource = ReadJSON();
-                */
+                
             }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (textBox1.Text != "")
+            {
+                dataGridView1.DataSource = loadSheetFromOutput();
+            }                
         }
     }
 }
